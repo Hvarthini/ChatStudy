@@ -82,13 +82,15 @@ import socket
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-client.connect(("127.0.0.1", 65432))
+client.connect(("localhost", 9999))
 
 done=False
 
 while not done:
     client.send(input("Message ").encode('utf-8'))
     msg = client.recv(1024).decode('utf-8')
+
+    msg= client.recv(1024).decode('utf-8')
 
     if msg == 'quit':
         done=True
@@ -98,18 +100,19 @@ while not done:
 
 
 client.close()
-client
+
+
 ```
 Server
 ```
 import socket
-from base64 import decode
-from operator import truediv
 
-server =socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(("127.0.0.1", 65432))
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+server.bind(('localhost', 9999))
 server.listen()
-client,addr=server.accept()
+
+client, addr = server.accept()
 
 done = False
 
@@ -117,19 +120,28 @@ while not done:
     msg = client.recv(1024).decode('utf-8')
 
     if msg == 'quit':
+        client.send('quit'.encode('utf-8'))
         done = True
     else:
         print(msg)
 
-    client.send(input("Message ").encode('utf-8'))
+        reply = input("Message: ")
+        client.send(reply.encode('utf-8'))
 
+        if reply == 'quit':
+            done = True
 
 client.close()
 server.close()
+
+
 ```
 ## Output:
-<img width="1220" height="410" alt="17591176814492840174570581802824" src="https://github.com/user-attachments/assets/a66bc2cc-8622-4914-b640-003338b618be" />
+Client:
+<img width="867" height="257" alt="cnexp1b1 1" src="https://github.com/user-attachments/assets/efa096f9-8cda-4f5d-8121-96a1832ac765" />
 
+Server:
+<img width="866" height="276" alt="cnexp1b1 2" src="https://github.com/user-attachments/assets/c9cfd3c0-d1f2-4a5e-83bd-828e0b997733" />
 
 
 ## Result:
